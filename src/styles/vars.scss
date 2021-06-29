@@ -1,0 +1,42 @@
+//pink color #cf0056,orangered,yellowgreen
+// blueviolet,palevioletred,royalblue
+// goldenrod,crimson,darkslategray
+
+
+
+$primary-color: hsl(180, 25%, 25%);
+
+$secondary-color:hsl(180, 25%, 45%);
+$tertiary-color:hsl(180, 25%, 65%);
+$primary-color-dark:#46031e;
+
+$color-success:hsl(135, 75%, 32%);
+$color-success-secondary:hsl(135, 75%, 42%);
+$color-success-tertiary:hsl(135, 75%, 52%);
+
+$color-error: red;
+
+$color-danger: hsl(0, 98%, 60%);
+$color-danger-secondary: hsl(0, 98%, 75%);
+$color-danger-tertiary: hsl(0, 98%, 85%);
+
+$color-orange: hsl(0, 26%, 57%);
+
+
+$anchor-box-shadow:rgba(0, 0, 0, 0.26);
+$anchor-active-box-shadow:rgba(77, 51, 51, 0.26);
+
+$modal-background:rgba(0, 0, 0, 0.75);
+
+
+$button-disabled-background:#ccc;
+$button-disabled-color:#959595;
+
+$text-bg-primary: lightgray;
+$text-bg-primary-hover: darkgray;
+
+$text-bg-primary-dark: rgb(0, 0, 0, 0.8);
+$text-bg-primary-dark-hover: rgb(0, 0, 0, 0.6);
+
+
+$navbar-height: 3rem;
