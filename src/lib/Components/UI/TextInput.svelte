@@ -28,6 +28,7 @@ Instead of this we are using touched from svelte-forms-lib
       {name}
       on:input
       bind:value
+      on:blur={() => (touched = true)}
     />
     {:else if type === 'number'} 
     <input
@@ -39,6 +40,7 @@ Instead of this we are using touched from svelte-forms-lib
     {min}
     {max}
     on:input
+    on:blur={() => (touched = true)}
 />
   {:else}
     <input
@@ -49,6 +51,7 @@ Instead of this we are using touched from svelte-forms-lib
       {name}
       {placeholder}
       on:input
+      on:blur={() => (touched = true)}
     />
   {/if}
   <!-- // when {type} is set dynamically then bind:value cannot be used

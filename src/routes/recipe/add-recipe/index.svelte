@@ -13,7 +13,7 @@ import FileInput from '$lib/Components/UI/FileInput.svelte';
 	// import { Container, Row, Col, Button, FormGroup, Input, Label, Alert } from 'sveltestrap/src';
 	import authStore from '../../../stores/authStore';
 	import { createRecipe } from '../../../db';
-	import '../../../yup';
+	//import '../../../yup'; //not needed as file validation done by us
 
 	authStore.subscribe(async ({ isLoggedIn, firebaseControlled }) => {
 		if (!isLoggedIn && firebaseControlled) {
@@ -38,14 +38,14 @@ import FileInput from '$lib/Components/UI/FileInput.svelte';
 		mainPicture: yup
 			.mixed()
 			.required('Picture Required')
-			.fileMax({
-				maxBytes: 1000,
-				message: 'Max Image size is 1MB'
-			})
-			.fileFormat({
-				formats: ['image/gif', 'image/jpeg', 'image/png'],
-				message: 'Images can only be png, gif, jpg'
-			})
+		// 	.fileMax({
+		// 		maxBytes: 1000,
+		// 		message: 'Max Image size is 1MB'
+		// 	})
+		// 	.fileFormat({
+		// 		formats: ['image/gif', 'image/jpeg', 'image/png'],
+		// 		message: 'Images can only be png, gif, jpg'
+		// 	})
 	});
 
 	//form and errors are stores and handleChange and handleSubmit are callback functions
@@ -58,7 +58,7 @@ import FileInput from '$lib/Components/UI/FileInput.svelte';
 		touched,
 		handleChange,
 		handleSubmit,
-		updateValidateField
+		// updateValidateField
 	} = createForm({
 		initialValues: {
 			title: '',
@@ -75,6 +75,7 @@ import FileInput from '$lib/Components/UI/FileInput.svelte';
 		validationSchema: schema,
 		onSubmit: async (values) => {
 			try {
+				console.log('Inside onSubmit in index.svelte');
 				await createRecipe(values, $authStore.user.uid);
 				alert('Saved Recipe');
 			} catch (e) {
@@ -103,7 +104,8 @@ import FileInput from '$lib/Components/UI/FileInput.svelte';
 
 	let units = ['None','Pounds','Ounces','Cups'];
 
-	$: console.log('$touched',$touched);
+	//$: console.log('$touched',$touched);
+	$: console.log('$isSubmitting',$isSubmitting);
 </script>
 
 <main>
@@ -139,11 +141,10 @@ import FileInput from '$lib/Components/UI/FileInput.svelte';
 				touched={$touched.description}
 				errorMessage={$errors.description ? $errors.description : ''}
 			/>
-
+	<!-- invalid={$errors.mainPicture.length > 0} -->
 
 			<FileInput
-				on:change={(e) => updateValidateField('mainPicture', e.target.files[0])}
-				invalid={$errors.mainPicture.length > 0}
+				on:fileUploaded={(event)=>{$form.mainPicture = event.detail; $errors.mainPicture = '';}}
 				name="mainPicture"
 				id="mainPicture"
 				label='MainPicture'

@@ -1,4 +1,6 @@
 // THIS FILE IS ADDED LATER FOR ADDING FILE VALIDATIONS OURSELVE
+
+// THIS FILE IS NOT NEEDED NOW AS WE ARE VALIDATING FILE INPUT OURSELVES
 import * as yup from "yup";
 
 yup.addMethod(yup.mixed, "fileMax", function (args) {

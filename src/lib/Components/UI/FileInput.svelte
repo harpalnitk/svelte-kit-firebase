@@ -1,45 +1,91 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
+
+const dispatch = createEventDispatcher();
+
 export let id;
 export let label;
 export let name;
-export let invalid = false;
 export let errorMessage;
+export let maxFileSize = 1; // In MegaBytes
+export let validFileType = '.jpg, .jpeg, .png';
+export let showPreview = true;
+let avatar;
+
+
+const validateAndDispatch = (e)=>{
+  let image = e.target.files[0];
+  if(image){
+    //console.log('File Size',image.size); // In Bytes
+    const size = image.size / (maxFileSize * 1024 * 1024);
+   // console.log('size in MegaBytes', size); // In MegaBytes
+
+   // console.log('File Type',image.type);
+    const fileExt = image.type.split('/')[1];
+   // console.log('File Ext',fileExt);
+
+    if(!(
+        fileExt == 'jpeg' ||
+        fileExt == 'jpg' ||
+        fileExt == 'png'
+      )){
+        errorMessage = `Only files of type JPEG, JPG accepted`;
+      return;
+    }else if (size > maxFileSize || size <= 0) {
+      errorMessage = `Max File Size allowed is ${maxFileSize} MegaBytes`;
+      return;
+    } else  {
+     // console.log('e',e);
+      dispatch('fileUploaded', image);
+    }
+
+    if(showPreview){
+      let reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e => {
+                 avatar = e.target.result
+            };
+    }
+
+   
+  }
+
+}
 </script>
 
+{#if showPreview && avatar}
+<section>
+  <img class="avatar" src="{avatar}" alt="Uploaded Image Preview" />
+</section>
+{/if}
 
-
-  
+  <main>
     <input
-        on:change
-        class:invalid={invalid}
+        on:change={validateAndDispatch}
         type="file"
         {name}
         {id}
         class='inputfile'
+        accept={validFileType}
     />
     <label for={id}>Choose {label}</label>
     {#if errorMessage}
         <small class="error-message">{errorMessage}</small>
     {/if}
+  </main>
+
 
 
 
 
 <style lang="scss">
     @import '../../../styles/vars';
-  //     label {
-  //   display: block;
-  //   margin-bottom: 0.5rem;
-  //   width: 100%;
-  // }
 
-  // .form-control {
-  //   padding: 0.5rem 0;
-  //   width: 100%;
-  //   margin: 0.25rem 0;
-  // }
-
-  input[type='file']{
+    main {
+      display: flex;
+      place-content: flex-start;
+    }
+   input[type='file']{
     width: 0.1px;
   height: 0.1px;
   opacity: 0;
@@ -84,12 +130,15 @@ input[type='file'] + label * {
   pointer-events: none;
 }
 
-  .invalid {
-    border-color: $color-error;
-    background: $color-danger-tertiary;
-  }
   .error-message {
     color: $color-error;
-    margin: 0.25rem 0;
+    margin-left: 0.5rem;
+    align-self: center;
   }
+
+  .avatar{
+		display:flex;
+		height:50px;
+		width:50px;
+	}
 </style>
