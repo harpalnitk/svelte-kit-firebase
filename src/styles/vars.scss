@@ -8,7 +8,7 @@ $primary-color: hsl(180, 25%, 25%);
 
 $secondary-color:hsl(180, 25%, 45%);
 $tertiary-color:hsl(180, 25%, 65%);
-$primary-color-dark:#46031e;
+$primary-color-dark:hsl(180, 25%, 15%);
 
 $color-success:hsl(135, 75%, 32%);
 $color-success-secondary:hsl(135, 75%, 42%);
@@ -40,3 +40,8 @@ $text-bg-primary-dark-hover: rgb(0, 0, 0, 0.6);
 
 
 $navbar-height: 3rem;
+
+//FONTS
+$fs-small: .8rem;
+$fs-medium: 1rem;
+$fs-large: 1.5rem;

@@ -11,6 +11,8 @@
 <script lang="ts">
 	import Header from '$lib/Header/index.svelte';
 	import '../app.scss';
+	import Navbar from '$lib/components/UI/Navigation/Navbar.svelte';
+	import Sidebar from '$lib/components/UI/Navigation/Sidebar.svelte';
 
 	//Initialize Firebase IMPORT
 	import firebase from 'firebase/app';
@@ -23,6 +25,7 @@
 	onMount(() => {
 		//! This is done inside onMount
 	firebase.auth().onAuthStateChanged((user)=>{
+		console.log('Auth State changed in the Layout File')
 	authStore.set({
 		isLoggedIn: user !==null,
 		user,
@@ -30,18 +33,22 @@
 	});
 	});
 	});
-
+	let open= false;
+  //The framework give value of url{/about, /page} to this variable
+  export let segment;
 
 </script>
 
-<Header />
+<!-- <Header /> -->
+<Sidebar bind:open/>
+<Navbar bind:sidebar={open} {segment}/>
 
 <main>
 	<slot />
 </main>
 
 <footer>
-	<p>My Footer</p>
+	<p>All rights reserved. Lotus Corporation</p>
 </footer>
 
 <style>

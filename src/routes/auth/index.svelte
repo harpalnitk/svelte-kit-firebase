@@ -1,9 +1,24 @@
 <script lang='ts'>
+    	import { goto } from '$app/navigation';
     import firebase from 'firebase/app';
     import TextInput from '$lib/Components/UI/TextInput.svelte';
     import Button from '$lib/Components/UI/Button.svelte';
+    import { updateUser } from '../../auth-db';
+    import LoadingSpinner from '$lib/Components/UI/LoadingSpinner.svelte';
       //validation
-  import { isEmpty, isValidEmail } from '$lib/helpers/validation.js';
+  import { isEmpty, isValidEmail, minLength, maxLength } from '$lib/helpers/validation.js';
+  //transitions
+  import { fade } from 'svelte/transition';
+
+let isLoading = true;
+let signup= false;
+let email= '';
+let password= '';
+let error=''
+$: emailValid = !isEmpty(email) && isValidEmail(email);
+$: passwordValid = !isEmpty(password) && minLength(password) && maxLength(password);
+$: formValid = emailValid && passwordValid;
+$: console.log(emailValid);
 
 async function loginWithGoogle(){
     try {
@@ -11,40 +26,63 @@ async function loginWithGoogle(){
         await firebase.auth().signInWithPopup(provider);
     } catch (e) {
         console.log('Error in sign in with Google', e);
+        error = e.message;
     }
 }
 
-let email= '';
-let password= ''
-$: emailValid = !isEmpty(email) && isValidEmail(email);
-$: passwordValid = !isEmpty(password);
-$: formValid = emailValid && passwordValid;
-$: console.log(emailValid);
 
-const loginWithEmailAndPassword = async () => {
+const loginWithEmailAndPassword =  async () => {
     try {
         console.log(`Email: ${email} Password: ${password}`);
-        await firebase.auth().signInWithEmailAndPassword(email, password);
+        if (signup) {
+             firebase.auth().createUserWithEmailAndPassword(email, password).then(async res=>{
+                 console.log('Response in Signup', res);
+                 await updateUser(res.user.uid, res.user.email,res.user.photoURL, res.user.displayName);
+                 await goto('/');
+             }).catch(e=> handleError(e));
+        } else {
+             firebase.auth().signInWithEmailAndPassword(email, password).then(async res=>{
+                 console.log('Response in SignIn', res);
+                 await goto('/');
+             }).catch(e=> handleError(e));
+        }
+      
     } catch (e) {
-        console.log('Error in sign in with Google', e);
+           console.log('Error in loginWithEmailAndPassword ', e);
     }  
+}
+
+
+
+const handleError = (e)=>{
+    console.log('Error in sign in with Email and Password', e);
+        error = e.message;
 }
 </script>
 <main>
-    <section>
+    {#if isLoading}
+        <LoadingSpinner/>
+    {:else}
+    {#if !signup}
+    <section transition:fade>
         <h1>Login With Google</h1>
         <img 
         src="sign-in-google.png"
          alt="Login With Google"
          on:click="{loginWithGoogle}"/>
-    </section>
-    <section>
         <span class='divider'>
             OR
         </span>
     </section>
+    {/if}
+
     <section>
+
+    
         <form on:submit|preventDefault={loginWithEmailAndPassword}>
+            {#if error}
+            <div class='error-msg'>{error}</div>
+            {/if}
             <TextInput
             value={email}
             on:input={(event) => (email = event.target.value)}
@@ -54,7 +92,7 @@ const loginWithEmailAndPassword = async () => {
             id='email'
             type='email'
             placeholder='Email'
-            errorMessage='Email is required'
+            errorMessage='Not a valid Email'
         />
         <TextInput
         value={password}
@@ -65,32 +103,62 @@ const loginWithEmailAndPassword = async () => {
         id='password'
         type='password'
         placeholder='Password'
-        errorMessage='Password is required'
+        errorMessage='Minimum 6 characters password is required'
     />
-    <Button type="submit" size='small' disabled={!formValid}>Submit</Button>
+    <Button type="submit" size='small' disabled={!formValid}>{signup ? 'SignUp': 'SignIn'}</Button>
         </form>
     </section>
-    <pre>
-        Email: {email}
-        Password: {password}
-    </pre>
-
+    {#if signup}
+    <a class='signup-link' on:click={()=>signup = !signup}>Switch to Sign In!</a>
+    {:else}
+    <a class='signup-link' on:click={()=>signup = !signup}>Not a member ? Sign Up!</a>
+    {/if}
+    {/if}
+   
 </main>
 
 
- <style>
+<style lang="scss">
+    @import '../../styles/vars';
      main, section{
+         width:auto;
          display: flex;
          flex-direction: column;
          justify-content: center;
          align-items: center;
      }
+     h1{
+
+     }
+
+     main {
+         border: 1px solid grey;
+         border-radius: 5px;
+         width: clamp(25ch, 50%, 75ch);
+         margin: 0 auto;
+         padding: 2rem;
+     }
      img{
          width: 10rem;
          cursor: pointer;
      }
-     .divider::before{
+     .divider {
+         margin: 1rem 0;
+     }
+     .divider::before, .divider::after{
          content:'----';
          align-self: center;
+     }
+     .signup-link {
+         margin-top: .5rem;
+         color: $primary-color;
+         font-size: $fs-small;
+         cursor: pointer;
+     }
+     .error-msg {
+         color: $color-danger;
+         width: 28ch;
+         font-size: $fs-small;
+         margin: .25rem 0;
      }
  </style>

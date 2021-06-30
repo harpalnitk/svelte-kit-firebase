@@ -65,7 +65,7 @@ and
     bind:value
     -->
   {#if errorMessage && invalid && touched}
-    <small class="error-message">{errorMessage}</small>
+    <div class="error-msg">{errorMessage}</div>
   {/if}
 </div>
 
@@ -105,8 +105,10 @@ and
     border-color: $color-error;
     background: $color-danger-tertiary;
   }
-  .error-message {
-    color: $color-error;
-    margin: 0.25rem 0;
-  }
+  .error-msg {
+         color: $color-danger;
+         width: 28ch;
+         font-size: $fs-small;
+         margin: .25rem 0;
+     }
 </style>

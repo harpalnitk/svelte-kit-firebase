@@ -1,3 +1,14 @@
+<!--  Since in Add recipe we are using a different layout -->
+<script context="module" lang="ts"> // THIS WILL RUN BOTH ON SERVER AND CLIENT
+	import { initFirebase } from "../../../initFirebase";
+	export async function load({ page, fetch, session, context }) {
+	  await initFirebase();
+	  return {
+		props: {},
+	  };
+	}
+  </script>
+
 <script lang="ts">
 import Button from '$lib/Components/UI/Button.svelte';
 import TextInput from '$lib/Components/UI/TextInput.svelte';
@@ -10,14 +21,13 @@ import FileInput from '$lib/Components/UI/FileInput.svelte';
 	import { goto } from '$app/navigation';
 	import * as yup from 'yup';
 	import { createForm } from 'svelte-forms-lib';
-	// import { Container, Row, Col, Button, FormGroup, Input, Label, Alert } from 'sveltestrap/src';
 	import authStore from '../../../stores/authStore';
 	import { createRecipe } from '../../../db';
 	//import '../../../yup'; //not needed as file validation done by us
 
 	authStore.subscribe(async ({ isLoggedIn, firebaseControlled }) => {
 		if (!isLoggedIn && firebaseControlled) {
-			await goto('/login');
+			await goto('/auth');
 		}
 	});
 
@@ -55,7 +65,6 @@ import FileInput from '$lib/Components/UI/FileInput.svelte';
 		errors,
 		isValid,
 		isSubmitting,
-		touched,
 		handleChange,
 		handleSubmit,
 		// updateValidateField
@@ -122,7 +131,6 @@ import FileInput from '$lib/Components/UI/FileInput.svelte';
 				name="title"
 				id="title"
 				label='Title'
-				touched={$touched.title}
 				placeholder="Recipe Title"
 				errorMessage={$errors.title ? $errors.title : ''}
 			/>
@@ -138,7 +146,6 @@ import FileInput from '$lib/Components/UI/FileInput.svelte';
 				label='Description'
 				placeholder="Recipe Description"
 				rows=2
-				touched={$touched.description}
 				errorMessage={$errors.description ? $errors.description : ''}
 			/>
 	<!-- invalid={$errors.mainPicture.length > 0} -->
@@ -173,7 +180,6 @@ import FileInput from '$lib/Components/UI/FileInput.svelte';
 						 name={`ingredients[${i}].name`}
 						 id={`ingredients_${i}_name`}
 						 placeholder="Name"
-						 touched={$touched.ingredients[i] ? $touched.ingredients[i]['name']: false}
 						 errorMessage={($errors.ingredients[i] && $errors.ingredients[i]['name'])? $errors.ingredients[i]['name'] : ''}
 					 />
 					 <SelectInput
@@ -196,7 +202,6 @@ import FileInput from '$lib/Components/UI/FileInput.svelte';
 						 max = 300000
 						 name={`ingredients[${i}]amount`}
 						 id={`ingredients_${i}_amount`}
-						 touched={$touched.ingredients[i] ? $touched.ingredients[i].name : false}
 						 errorMessage={$errors.ingredients[i] && $errors.ingredients[i]['amount'] ? $errors.ingredients[i]['amount'] : ''}
 					 />
               <div>

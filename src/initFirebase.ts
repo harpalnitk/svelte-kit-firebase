@@ -1,4 +1,5 @@
 import firebaseConfig from "./env";
+import { firestore } from "./firestore";
 
 export async function initFirebase() {
   console.log('Inside Init Firebase');
@@ -14,6 +15,7 @@ export async function initFirebase() {
     console.log('Inside Init Firebase Client fb.apps.length', fb.apps.length);
 	!fb.apps.length ? fb.initializeApp(firebaseConfig) : fb.app();
   console.log('Inside Init Firebase Client fb.apps.length', fb.apps.length);
+  await firestore();
     return;
   }
 
