@@ -1,4 +1,5 @@
 ## GIT SETUP
+FIRST download zip file from remote directory
 git init
 git add .
 git commit -m "First commit"
