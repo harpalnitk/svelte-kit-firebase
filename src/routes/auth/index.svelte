@@ -1,37 +1,41 @@
 <script lang='ts'>
-    	import { goto } from '$app/navigation';
+    import uiStore from '../../stores/uiStore';
+    import { goto } from '$app/navigation';
     import firebase from 'firebase/app';
     import TextInput from '$lib/Components/UI/TextInput.svelte';
     import Button from '$lib/Components/UI/Button.svelte';
     import { updateUser } from '../../auth-db';
-    import LoadingSpinner from '$lib/Components/UI/LoadingSpinner.svelte';
       //validation
   import { isEmpty, isValidEmail, minLength, maxLength } from '$lib/helpers/validation.js';
   //transitions
   import { fade } from 'svelte/transition';
 
-let isLoading = true;
 let signup= false;
 let email= '';
 let password= '';
-let error=''
+$: error = $uiStore.localMsg;
 $: emailValid = !isEmpty(email) && isValidEmail(email);
 $: passwordValid = !isEmpty(password) && minLength(password) && maxLength(password);
 $: formValid = emailValid && passwordValid;
 $: console.log(emailValid);
 
 async function loginWithGoogle(){
+    uiStore.setIsLoading(true);
     try {
         const provider = new firebase.auth.GoogleAuthProvider();
         await firebase.auth().signInWithPopup(provider);
+        await goto('/');
+        uiStore.setIsLoading(false);
     } catch (e) {
         console.log('Error in sign in with Google', e);
         error = e.message;
+        uiStore.setMsgDangerLoading('Error in sign in with Google', false);
     }
 }
 
 
 const loginWithEmailAndPassword =  async () => {
+    uiStore.setLocalMsgLoading('', true);
     try {
         console.log(`Email: ${email} Password: ${password}`);
         if (signup) {
@@ -39,11 +43,13 @@ const loginWithEmailAndPassword =  async () => {
                  console.log('Response in Signup', res);
                  await updateUser(res.user.uid, res.user.email,res.user.photoURL, res.user.displayName);
                  await goto('/');
+                 uiStore.setIsLoading(false);
              }).catch(e=> handleError(e));
         } else {
              firebase.auth().signInWithEmailAndPassword(email, password).then(async res=>{
                  console.log('Response in SignIn', res);
                  await goto('/');
+                 uiStore.setIsLoading(false);
              }).catch(e=> handleError(e));
         }
       
@@ -56,13 +62,13 @@ const loginWithEmailAndPassword =  async () => {
 
 const handleError = (e)=>{
     console.log('Error in sign in with Email and Password', e);
-        error = e.message;
+    //error = e.message;
+    uiStore.setLocalMsgLoading(e.message, false);
+ 
 }
 </script>
 <main>
-    {#if isLoading}
-        <LoadingSpinner/>
-    {:else}
+
     {#if !signup}
     <section transition:fade>
         <h1>Login With Google</h1>
@@ -113,7 +119,7 @@ const handleError = (e)=>{
     {:else}
     <a class='signup-link' on:click={()=>signup = !signup}>Not a member ? Sign Up!</a>
     {/if}
-    {/if}
+   
    
 </main>
 
@@ -161,4 +167,6 @@ const handleError = (e)=>{
          font-size: $fs-small;
          margin: .25rem 0;
      }
+
+
  </style>

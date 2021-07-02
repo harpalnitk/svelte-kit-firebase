@@ -1,59 +1,83 @@
 <script>
 	import { page } from '$app/stores';
-  import authStore from '../../../../stores/authStore';
-
-  $: console.log($page.path);
+	import authStore from '../../../../stores/authStore';
+	import DropdownMenu from '$lib/Components/UI/DropdownMenu.svelte';
 </script>
 
-
 <nav class="menu-controller">
-  <a aria-current="{$page.path === '/' ? 'page' : undefined}" sveltekit:prefetch href="/">Home</a>
-  <a aria-current="{$page.path === '/about' ? 'page' : undefined}" sveltekit:prefetch href="/about">About</a>
-  <a aria-current="{$page.path === '/recipe' ? 'page' : undefined}" sveltekit:prefetch href="/recipe">Recipe</a>
-  {#if !$authStore.isLoggedIn}
-
-  <a sveltekit:prefetch href="/auth">
-    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path class='svg-fill' d="M17 1.7C11.5335 1.7 6.48243 4.61655 3.74917 9.35C1.0172 14.0835 1.0172 19.9165 3.74917 24.65C6.48246 29.3835 11.5335 32.3 17 32.3C20.4918 32.3133 23.8809 31.1193 26.5917 28.9199C29.9014 26.2557 31.9559 22.3365 32.2602 18.0984C32.5657 13.8603 31.0954 9.68748 28.2003 6.57682C25.3063 3.46636 21.249 1.69986 17.0003 1.69986L17 1.7ZM27.9956 24.411C27.2651 22.1412 25.014 20.2514 21.9925 19.2447C20.7069 20.6405 18.8967 21.4361 17 21.4361C15.1021 21.4347 13.292 20.6405 12.0074 19.2447C8.98463 20.2514 6.73335 22.1413 6.00439 24.411C4.20212 21.7388 3.43579 18.5008 3.8475 15.3041C4.25921 12.1073 5.82242 9.17082 8.24234 7.04174C10.6622 4.91276 13.7752 3.7387 16.9987 3.7387C20.2221 3.7387 23.3353 4.91276 25.7564 7.04041C28.1763 9.16939 29.7395 12.1057 30.1513 15.3027C30.563 18.4995 29.7966 21.7376 27.9957 24.411L27.9956 24.411Z" fill="white"></path>
-      <path class='svg-fill' d="M22.5049 13.6092C22.5049 16.9919 20.0399 19.736 17 19.736C13.9586 19.736 11.4937 16.9921 11.4937 13.6092C11.4937 10.2251 13.9587 7.48236 17 7.48236C20.0401 7.48236 22.5049 10.2249 22.5049 13.6092Z" fill="white"></path>
-      </svg>
-  </a>
-  {:else}
-  <a  sveltekit:prefetch href="/profile">
-      <img src="avatar/girl-avatar.png" class="avatar">
-  </a>
-  {/if}
+	<a aria-current={$page.path === '/' ? 'page' : undefined}  href="/">Home</a>
+	<a aria-current={$page.path === '/about' ? 'page' : undefined}  href="/about">About</a>
+	<a aria-current={$page.path === '/recipe' ? 'page' : undefined}  href="/recipe">Recipe</a>
+	{#if !$authStore.isLoggedIn}
+		<DropdownMenu left="-120px">
+			<span slot="dropdown">
+				<a sveltekit:prefetch href="/auth">
+					<svg
+						width="34"
+						height="34"
+						viewBox="0 0 34 34"
+						fill="none"
+						xmlns="http://www.w3.org/2000/svg"
+					>
+						<path
+							class="svg-fill"
+							d="M17 1.7C11.5335 1.7 6.48243 4.61655 3.74917 9.35C1.0172 14.0835 1.0172 19.9165 3.74917 24.65C6.48246 29.3835 11.5335 32.3 17 32.3C20.4918 32.3133 23.8809 31.1193 26.5917 28.9199C29.9014 26.2557 31.9559 22.3365 32.2602 18.0984C32.5657 13.8603 31.0954 9.68748 28.2003 6.57682C25.3063 3.46636 21.249 1.69986 17.0003 1.69986L17 1.7ZM27.9956 24.411C27.2651 22.1412 25.014 20.2514 21.9925 19.2447C20.7069 20.6405 18.8967 21.4361 17 21.4361C15.1021 21.4347 13.292 20.6405 12.0074 19.2447C8.98463 20.2514 6.73335 22.1413 6.00439 24.411C4.20212 21.7388 3.43579 18.5008 3.8475 15.3041C4.25921 12.1073 5.82242 9.17082 8.24234 7.04174C10.6622 4.91276 13.7752 3.7387 16.9987 3.7387C20.2221 3.7387 23.3353 4.91276 25.7564 7.04041C28.1763 9.16939 29.7395 12.1057 30.1513 15.3027C30.563 18.4995 29.7966 21.7376 27.9957 24.411L27.9956 24.411Z"
+							fill="white"
+						/>
+						<path
+							class="svg-fill"
+							d="M22.5049 13.6092C22.5049 16.9919 20.0399 19.736 17 19.736C13.9586 19.736 11.4937 16.9921 11.4937 13.6092C11.4937 10.2251 13.9587 7.48236 17 7.48236C20.0401 7.48236 22.5049 10.2249 22.5049 13.6092Z"
+							fill="white"
+						/>
+					</svg>
+				</a>
+			</span>
+			<span slot="menu">
+				<a href="/auth" class="dropdown-link">SignIn</a>
+			</span>
+		</DropdownMenu>
+	{:else}
+		<DropdownMenu left="-120px">
+			<span slot="dropdown">
+					<img src="avatar/girl-avatar.png" class="avatar" />
+			</span>
+			<span slot="menu">
+				<a href="/profile" class="dropdown-link">Profile</a>
+				<a href="/auth/logout" class="dropdown-link">Logout</a>
+			</span>
+		</DropdownMenu>
+	{/if}
 </nav>
 
 <style lang="scss">
-   @import '../../../../styles/vars';
-  .menu-controller {
-    text-transform: uppercase;
-    color: $text-bg-primary;
-    display: none;
-    a {
-      align-self: center;
-      &:hover {
-        color: $text-bg-primary-hover;
-      }
-    }
-  }
-  @media (min-width: 640px) {
-    .menu-controller {
-      display: flex;
-      align-self: center;
+	@import '../../../../styles/vars';
+	.menu-controller {
+		text-transform: uppercase;
+		color: $text-bg-primary;
+		display: none;
+		a {
+			align-self: center;
+			&:hover {
+				color: $text-bg-primary-hover;
+			}
+		}
+	}
+	@media (min-width: 640px) {
+		.menu-controller {
+			display: flex;
+			align-self: center;
 
-      a:not(:last-child) {
-        margin-right: 0.5rem;
-      }
-    }
-  }
+			a:not(:last-child) {
+				margin-right: 0.5rem;
+			}
+		}
+	}
 
-  a:hover {
-	text-decoration: none;
-}
+	a:hover {
+		text-decoration: none;
+	}
 
-  [aria-current] {
+	[aria-current] {
 		position: relative;
 		display: inline-block;
 	}
@@ -67,24 +91,46 @@
 		display: block;
 		bottom: -18px;
 	}
-  .avatar{
-    width: 2.5rem;
-    border-radius: 50%;
-    background-size: contain;
-   }
-svg {
-  width: 2.5rem;
-  height: 2.5rem;
+	.avatar {
+		width: 2.5rem;
+		border-radius: 50%;
+		background-size: contain;
+	}
+	svg {
+		width: 2.5rem;
+		height: 2.5rem;
 
-  transition: all .2s ease;
-  &:hover{
-   transform: scale(1.1);
-  }
-}
-.svg-fill{
-  fill: $text-bg-primary;
-}
-.svg-fill:hover{
-  fill: $text-bg-primary-hover;
-}
+		transition: all 0.2s ease;
+		&:hover {
+			transform: scale(.9);
+		}
+	}
+	.svg-fill {
+		fill: $text-bg-primary;
+	}
+	.svg-fill:hover {
+		fill: $text-bg-primary-hover;
+	}
+
+	//DROPDOWN CSSS
+	.dropdown {
+		position: relative;
+		display: inline-block;
+	}
+
+	.dropdown-content {
+		display: none;
+		position: absolute;
+		background-color: #f9f9f9;
+		min-width: 160px;
+		box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+		padding: 12px 16px;
+		z-index: 1;
+	}
+
+	.dropdown:hover .dropdown-content {
+		display: block;
+	}
+
+
 </style>

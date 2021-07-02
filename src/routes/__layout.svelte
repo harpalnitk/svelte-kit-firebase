@@ -9,10 +9,12 @@
   </script>
 
 <script lang="ts">
-	import Header from '$lib/Header/index.svelte';
+	import uiStore from '../stores/uiStore';
+	import LoadingSpinner from '$lib/Components/UI/LoadingSpinner.svelte';
 	import '../app.scss';
 	import Navbar from '$lib/components/UI/Navigation/Navbar.svelte';
 	import Sidebar from '$lib/components/UI/Navigation/Sidebar.svelte';
+	import MessageBar from '$lib/components/UI/Navigation/MessageBar.svelte';
 
 	//Initialize Firebase IMPORT
 	import firebase from 'firebase/app';
@@ -34,18 +36,27 @@
 	});
 	});
 	let open= false;
-  //The framework give value of url{/about, /page} to this variable
-  export let segment;
-
 </script>
 
 <!-- <Header /> -->
 <Sidebar bind:open/>
-<Navbar bind:sidebar={open} {segment}/>
+<Navbar bind:sidebar={open}/>
+<MessageBar/>
 
-<main>
+<main on:click={()=>open=false}>
+	{#if $uiStore.isLoading}
+<LoadingSpinner/>
+{:else}
 	<slot />
+	{/if}
 </main>
+<pre>
+	Loading: {$uiStore.isLoading}
+	Message:{$uiStore.msg}
+	LocalMessage:{$uiStore.localMsg}
+	Type: {$uiStore.type}
+</pre>
+
 
 <footer>
 	<p>All rights reserved. Lotus Corporation</p>

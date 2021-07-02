@@ -107,3 +107,17 @@ button:focus:not(:focus-visible) {
 		font-size: 2.4rem;
 	}
 }
+
+//Used here because when we used slot
+//css style in on e component is not
+// applied to another one
+//Dropdownmenu.svelte
+
+	.dropdown-link {
+		color: var(--text-color);
+		padding: 12px 16px;
+		text-decoration: none;
+		display: block;
+	}
+
+
