@@ -3,10 +3,13 @@
 	import Hoverable from '$lib/components/Hoverable.svelte';
     import Avatar from '$lib/Pages/Auth/Avatar.svelte';
 	import UserAvatar from '$lib/Pages/Auth/UserAvatar.svelte';
+import {links} from '$lib/Pages/Auth/sideBarLinks';
+
 	export let open = false;
 	function closeSidebar() {
 		open = !open;
 	}
+	
 </script>
 
 <aside class="navigation" class:open>
@@ -14,81 +17,38 @@
         {#if !$authStore.isLoggedIn}
         <span>
             <a href="/auth">
-        <Avatar/>
+        <Avatar width='10vh'/>
             </a>
         </span>
+		<svg class="half-circle" viewBox="0 0 106 57">
+			<path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
+		  </svg>
         <span class='name'>Guest</span>
         {:else}
         <span>
             <UserAvatar width='10vh'/>
        </span>
+	   <svg class="half-circle" viewBox="0 0 106 57">
+		<path d="M102 4c0 27.1-21.9 49-49 49S4 31.1 4 4"></path>
+	  </svg>
        <span class='name'>Harpal Singh</span>
         {/if}
     </section>
 	<ul>
+		{#each links as link}
+		{#if $authStore.isLoggedIn || link.auth}
 		<Hoverable let:hovering>
 			<li class="list" class:active={hovering} on:click={closeSidebar}>
 				<b />
 				<b />
-				<a href="/">
-					<span class="icon"><i class="fa fa-home" aria-hidden="true" /></span>
-					<span class="title">Home</span>
+				<a href="{link.path}">
+					<span class="icon"><i class="{link.icon}" aria-hidden="true" /></span>
+					<span class="title">{link.name}</span>
 				</a>
 			</li>
 		</Hoverable>
-		<Hoverable let:hovering>
-			<li class="list" class:active={hovering} on:click={closeSidebar}>
-				<b />
-				<b />
-				<a href="/about">
-					<span class="icon"><i class="fa fa-info-circle" aria-hidden="true" /></span>
-					<span class="title">About</span>
-				</a>
-			</li>
-		</Hoverable>
-		<Hoverable let:hovering>
-			<li class="list" class:active={hovering} on:click={closeSidebar}>
-				<b />
-				<b />
-				<a href="/contact">
-					<span class="icon"><i class="far fa-address-card" /></span>
-					<span class="title">Contact</span>
-				</a>
-			</li>
-		</Hoverable>
-		{#if $authStore.isLoggedIn}
-			<Hoverable let:hovering>
-				<li class="list" class:active={hovering} on:click={closeSidebar}>
-					<b />
-					<b />
-					<a href="/profile">
-						<span class="icon"><i class="fa fa-user" aria-hidden="true" /></span>
-						<span class="title">Profile</span>
-					</a>
-				</li>
-			</Hoverable>
-			<Hoverable let:hovering>
-				<li class="list" class:active={hovering} on:click={closeSidebar}>
-					<b />
-					<b />
-					<a href="/auth/logout">
-						<span class="icon"><i class="fas fa-sign-out-alt" aria-hidden="true" /></span>
-						<span class="title">Signout</span>
-					</a>
-				</li>
-			</Hoverable>
-		{:else}
-			<Hoverable let:hovering>
-				<li class="list" class:active={hovering} on:click={closeSidebar}>
-					<b />
-					<b />
-					<a href="/auth">
-						<span class="icon"><i class="fas fa-sign-in-alt" /></span>
-						<span class="title">Signin</span>
-					</a>
-				</li>
-			</Hoverable>
 		{/if}
+		{/each}
 	</ul>
 </aside>
 
@@ -106,16 +66,17 @@
 	.header {
 		height: 20vh;
         display: grid;
-        grid-template-rows: 2fr 1fr;
+	     grid-template-rows: 2fr 1fr 1fr;
         // gap: 1em;
         place-content: center;
 		background: linear-gradient(
 			48deg,
 			$primary-color 0%,
-			$secondary-color 50%,
+			$secondary-color 25%,
 			$tertiary-color 100%,
 			
 		);
+		position: relative;
 	}
 
     .header > * {
@@ -125,8 +86,23 @@
 
     .name{
         font-weight: 700;
-        box-shadow: 0 0 10px -2px rgba(0,0,0,0.5);
+        box-shadow: 0 0 6px -2px rgba(0,0,0,0.5);
+		margin-top: -8vh;
     }
+
+	.half-circle {
+  position: relative; // to position anywhere in the grid
+//   bottom: 0;
+//   left: 0;
+
+  width: 13vh; // all below to change semi circle to semi circle arc
+  margin-top: -10vh;
+
+  fill: none;
+  stroke: $primary-color;
+  stroke-width: 8;
+  stroke-linecap: round;
+}
 
 	.open {
 		left: 0;

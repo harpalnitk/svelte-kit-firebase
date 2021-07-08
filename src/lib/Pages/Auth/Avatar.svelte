@@ -1,9 +1,13 @@
+<script>
+	export let width = '2.5rem';
+</script>
 <svg
 width="34"
 height="34"
 viewBox="0 0 34 34"
 fill="none"
 xmlns="http://www.w3.org/2000/svg"
+style="width:{width};height:{width};"
 >
 <path
     class="svg-fill"
@@ -18,11 +22,6 @@ xmlns="http://www.w3.org/2000/svg"
 </svg>
 <style lang="scss">
     @import '../../../styles/vars';
-
-	svg {
-		width: 2.5rem;
-		height: 2.5rem;
-	}
 	.svg-fill {
 		fill: $text-bg-primary;
 	}
