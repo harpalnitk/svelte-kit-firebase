@@ -69,18 +69,7 @@ const handleError = (e)=>{
 </script>
 <main>
 
-    {#if !signup}
-    <section transition:fade>
-        <h1>Login With Google</h1>
-        <img 
-        src="sign-in-google.png"
-         alt="Login With Google"
-         on:click="{loginWithGoogle}"/>
-        <span class='divider'>
-            OR
-        </span>
-    </section>
-    {/if}
+
 
     <section>
 
@@ -111,14 +100,30 @@ const handleError = (e)=>{
         placeholder='Password'
         errorMessage='Minimum 6 characters password is required'
     />
-    <Button type="submit" size='small' disabled={!formValid}>{signup ? 'SignUp': 'SignIn'}</Button>
+    <Button type="submit" size='small' disabled={!formValid} width='100'>{signup ? 'SignUp': 'SignIn'} </Button>
         </form>
     </section>
+    {#if !signup}
+    <div class="strike">
+        <span>OR</span>
+      </div>
+    <section transition:fade>
+        <div class="google-login" on:click="{loginWithGoogle}">
+            <img 
+            src="google-logo.png"
+            alt="Login With Google"
+            />
+            <h2>Login With Google</h2>
+        </div>
+    </section>
+    {/if}
+    <div class="animated-line" transition:fade>
     {#if signup}
     <a class='signup-link' on:click={()=>signup = !signup}>Switch to Sign In!</a>
     {:else}
     <a class='signup-link' on:click={()=>signup = !signup}>Not a member ? Sign Up!</a>
     {/if}
+    </div>
    
    
 </main>
@@ -141,7 +146,7 @@ const handleError = (e)=>{
          border: 1px solid grey;
          border-radius: 5px;
          width: clamp(25ch, 50%, 75ch);
-         margin: 0 auto;
+         margin: 1rem auto;
          padding: 2rem;
      }
      img{
@@ -167,6 +172,26 @@ const handleError = (e)=>{
          font-size: $fs-small;
          margin: .25rem 0;
      }
+
+     .google-login {
+         margin: 2rem 0;
+        display: flex;
+        transition: all .2s ease;
+        cursor:pointer;
+     }
+     .google-login:hover {
+       transform: scale(1.1);
+     }
+
+     .google-login img{
+         margin-right: .5rem;
+         height: 3rem;
+         width: 3rem;
+         
+        }
+        .strike{
+            margin-top: 1rem;
+        }
 
 
  </style>

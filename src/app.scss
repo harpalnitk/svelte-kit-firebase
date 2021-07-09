@@ -13,6 +13,7 @@
 	--background-without-opacity: rgba(255, 255, 255, 0.7);
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
+	--transaprent-white: rgba(255, 255, 255, .6);
 }
 
 * {
@@ -126,5 +127,69 @@ button:focus:not(:focus-visible) {
 		text-decoration: none;
 		display: block;
 	}
+
+
+
+	// HR with text in the middle effect
+	.strike {
+		width:100%;
+		display: block;
+		text-align: center;
+		overflow: hidden;
+		white-space: nowrap;
+	  }
+	  .strike>span {
+		position: relative;
+		display: inline-block;
+		font-weight: bold;
+	  }
+	  .strike>span:before,
+	  .strike>span:after {
+		content: "";
+		position: absolute;
+		top: 50%;
+		width: 9999px;
+		height: 1px;
+		background: var(--text-color);
+	  }
+	  .strike>span:before {
+		right: 100%;
+		margin-right: 15px;
+	  }
+	  .strike>span:after {
+		left: 100%;
+		margin-left: 15px;
+	  }
+
+
+
+	  .animated-line  a {
+		text-decoration: none;
+		// color: #a9a39f;
+			position: relative;
+			display: inline-block;
+			overflow: hidden;
+			margin-right: .2rem;
+			}
+			.animated-line  a:before {
+			content: "";
+			transition: .2s;
+			position: absolute;
+			top: calc(100% - 1px);
+			left: 0;
+			width: 100%;
+			height: 1px;
+			background: #333;
+			transform: translateX(-101%);
+			}
+		
+			.animated-line  a:focus, .animated-line  a:hover {
+			// color: #fff;
+			opacity: 1;
+		}
+		
+		.animated-line  a:focus:before, .animated-line  a:hover:before {
+			transform: translateX(0);
+		}
 
 

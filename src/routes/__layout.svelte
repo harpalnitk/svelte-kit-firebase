@@ -1,16 +1,18 @@
-<script context="module" lang="ts"> // THIS WILL RUN BOTH ON SERVER AND CLIENT
-	import { initFirebase } from "../initFirebase";
+<script context="module" lang="ts">
+	// THIS WILL RUN BOTH ON SERVER AND CLIENT
+	import { initFirebase } from '../initFirebase';
 	export async function load({ page, fetch, session, context }) {
-	  await initFirebase();
-	  return {
-		props: {},
-	  };
+		await initFirebase();
+		return {
+			props: {}
+		};
 	}
-  </script>
+</script>
 
 <script lang="ts">
 	import uiStore from '../stores/uiStore';
 	import LoadingSpinner from '$lib/Components/UI/LoadingSpinner.svelte';
+	import LoadingSpinner2 from '$lib/Components/UI/LoadingSpinner2.svelte';
 	import '../app.scss';
 	import Navbar from '$lib/components/UI/Navigation/Navbar.svelte';
 	import Sidebar from '$lib/components/UI/Navigation/Sidebar.svelte';
@@ -26,28 +28,28 @@
 
 	onMount(() => {
 		//! This is done inside onMount
-	firebase.auth().onAuthStateChanged((user)=>{
-		console.log('Auth State changed in the Layout File')
-	authStore.set({
-		isLoggedIn: user !==null,
-		user,
-		firebaseControlled: true
+		firebase.auth().onAuthStateChanged((user) => {
+			console.log('Auth State changed in the Layout File');
+			authStore.set({
+				isLoggedIn: user !== null,
+				user,
+				firebaseControlled: true
+			});
+		});
 	});
-	});
-	});
-	let open= false;
+	let open = false;
 </script>
 
 <!-- <Header /> -->
-<Sidebar bind:open/>
-<Navbar bind:sidebar={open}/>
-<MessageBar/>
+<Sidebar bind:open />
+<Navbar bind:sidebar={open} />
+<MessageBar />
 
-<main on:click={()=>open=false}>
+<main on:click={() => (open = false)}>
 	{#if $uiStore.isLoading}
-<LoadingSpinner/>
-{:else}
-	<slot />
+		<LoadingSpinner2 />
+	{:else}
+		<slot />
 	{/if}
 </main>
 <pre>
@@ -56,7 +58,6 @@
 	LocalMessage:{$uiStore.localMsg}
 	Type: {$uiStore.type}
 </pre>
-
 
 <footer>
 	<p>All rights reserved. Lotus Corporation</p>
