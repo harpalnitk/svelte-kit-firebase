@@ -1,10 +1,9 @@
 <script lang='ts'>
     import DropdownMenu from '$lib/Components/UI/DropdownMenu.svelte';
     import { goto } from '$app/navigation';
-    
-        import authStore from '../../stores/authStore';
+    import authStore from '../../stores/authStore';
       
-      authStore.subscribe(async ({isLoggedIn, firebaseControlled})=> {
+      authStore.subscribe(async ({isLoggedIn, firebaseControlled}) => {
           if(!isLoggedIn && firebaseControlled){
               await goto('/auth');
           }
